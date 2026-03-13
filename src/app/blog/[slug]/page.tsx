@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getBlogPostBySlug, BlogPost, getProfile, Profile } from "@/lib/supabase";
+import { ArrowLeft, Calendar, Clock, Github, Linkedin, ArrowRight } from "lucide-react";
 
 function formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -57,15 +58,16 @@ export default function BlogReaderPage() {
     if (isLoading) {
         return (
             <div className="min-h-screen bg-background">
-                <div className="mx-auto max-w-3xl px-6 py-20">
+                <div className="mx-auto max-w-4xl px-6 lg:px-8 py-20">
                     <div className="animate-pulse space-y-6">
-                        <div className="h-8 bg-muted rounded w-1/4"></div>
-                        <div className="h-12 bg-muted rounded w-3/4"></div>
-                        <div className="h-4 bg-muted rounded w-1/2"></div>
+                        <div className="h-8 bg-muted rounded-lg w-1/4"></div>
+                        <div className="h-14 bg-muted rounded-lg w-3/4"></div>
+                        <div className="h-4 bg-muted rounded-lg w-1/2"></div>
                         <div className="space-y-3 pt-8">
-                            <div className="h-4 bg-muted rounded"></div>
-                            <div className="h-4 bg-muted rounded"></div>
-                            <div className="h-4 bg-muted rounded w-5/6"></div>
+                            <div className="h-4 bg-muted rounded-lg"></div>
+                            <div className="h-4 bg-muted rounded-lg"></div>
+                            <div className="h-4 bg-muted rounded-lg w-5/6"></div>
+                            <div className="h-4 bg-muted rounded-lg w-4/6"></div>
                         </div>
                     </div>
                 </div>
@@ -75,14 +77,20 @@ export default function BlogReaderPage() {
 
     if (notFound || !post) {
         return (
-            <div className="min-h-screen bg-background">
-                <div className="mx-auto max-w-3xl px-6 py-20 text-center">
-                    <h1 className="text-4xl font-bold mb-4">Post Not Found</h1>
-                    <p className="text-muted-foreground mb-8">
+            <div className="min-h-screen bg-background flex items-center justify-center">
+                <div className="text-center px-6">
+                    <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
+                        <span className="text-3xl">404</span>
+                    </div>
+                    <h1 className="text-3xl font-bold mb-3">Post Not Found</h1>
+                    <p className="text-muted-foreground mb-8 max-w-md">
                         The blog post you&apos;re looking for doesn&apos;t exist or has been removed.
                     </p>
-                    <Button asChild>
-                        <a href="/#blog">← Back to Blog</a>
+                    <Button asChild className="gap-2">
+                        <a href="/#blog">
+                            <ArrowLeft className="w-4 h-4" />
+                            Back to Blog
+                        </a>
                     </Button>
                 </div>
             </div>
@@ -92,127 +100,124 @@ export default function BlogReaderPage() {
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
-            <nav className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-md">
-                <div className="mx-auto max-w-3xl px-6 py-4">
+            <nav className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
+                <div className="mx-auto max-w-4xl px-6 lg:px-8 py-4">
                     <div className="flex items-center justify-between">
                         <a
                             href="/"
-                            className="text-lg font-semibold tracking-tight hover:text-primary transition-colors"
+                            className="flex items-center gap-2 group"
                         >
-                            {profile?.initials || "KS"}
+                            <div className="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold transition-transform group-hover:scale-105">
+                                {profile?.initials || "KS"}
+                            </div>
                         </a>
-                        <div className="flex items-center gap-6">
-                            <a
-                                href="/#blog"
-                                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                            >
-                                ← All Posts
-                            </a>
-                        </div>
+                        <a
+                            href="/#blog"
+                            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground px-3 py-2 rounded-md hover:bg-muted/50"
+                        >
+                            <ArrowLeft className="w-3.5 h-3.5" />
+                            All Posts
+                        </a>
                     </div>
                 </div>
             </nav>
 
             {/* Article Header */}
-            <header className="mx-auto max-w-3xl px-6 pt-16 pb-8">
-                <div className="space-y-6">
-                    {/* Back link for mobile */}
-                    <a
-                        href="/#blog"
-                        className="inline-flex items-center text-sm text-primary hover:underline"
-                    >
-                        ← Back to all posts
-                    </a>
+            <header className="relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
+                <div className="relative mx-auto max-w-4xl px-6 lg:px-8 pt-16 pb-10">
+                    <div className="space-y-6">
+                        {/* Meta info */}
+                        <div className="flex flex-wrap items-center gap-3">
+                            <Badge variant="secondary" className="gap-1.5 text-xs">
+                                <Calendar className="w-3 h-3" />
+                                {post.published_at ? formatDate(post.published_at) : "Draft"}
+                            </Badge>
+                            <Badge variant="outline" className="gap-1.5 text-xs">
+                                <Clock className="w-3 h-3" />
+                                {post.read_time} min read
+                            </Badge>
+                        </div>
 
-                    {/* Title */}
-                    <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-tight">
-                        {post.title}
-                    </h1>
+                        {/* Title */}
+                        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1]">
+                            {post.title}
+                        </h1>
 
-                    {/* Meta info */}
-                    <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
-                        <div className="flex items-center gap-2">
-                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                        {/* Description */}
+                        <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
+                            {post.description}
+                        </p>
+
+                        {/* Author */}
+                        <div className="flex items-center gap-3 pt-2">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
                                 {profile?.initials || "KS"}
                             </div>
                             <div>
-                                <p className="text-sm font-medium text-foreground">
+                                <p className="text-sm font-medium">
                                     {profile?.name || "Author"}
                                 </p>
-                                <p className="text-xs">
-                                    {post.published_at ? formatDate(post.published_at) : "Draft"}
+                                <p className="text-xs text-muted-foreground">
+                                    Software Developer
                                 </p>
                             </div>
                         </div>
-                        <Separator orientation="vertical" className="h-6" />
-                        <Badge variant="secondary" className="text-xs">
-                            {post.read_time} min read
-                        </Badge>
                     </div>
-
-                    {/* Description */}
-                    <p className="text-xl text-muted-foreground leading-relaxed">
-                        {post.description}
-                    </p>
                 </div>
             </header>
 
-            <Separator className="mx-auto max-w-3xl" />
+            <Separator className="mx-auto max-w-4xl" />
 
             {/* Article Content */}
-            <article className="mx-auto max-w-3xl px-6 py-12">
-                <div className="prose prose-lg prose-neutral dark:prose-invert max-w-none">
+            <article className="mx-auto max-w-4xl px-6 lg:px-8 py-12">
+                <div className="max-w-none prose-article">
                     <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
-                            // Custom heading styles
                             h1: ({ children }) => (
-                                <h1 className="text-3xl font-bold mt-12 mb-6 first:mt-0">
+                                <h1 className="text-3xl font-bold mt-14 mb-6 first:mt-0 tracking-tight">
                                     {children}
                                 </h1>
                             ),
                             h2: ({ children }) => (
-                                <h2 className="text-2xl font-semibold mt-10 mb-4 pb-2 border-b border-border/50">
+                                <h2 className="text-2xl font-semibold mt-12 mb-4 pb-3 border-b border-border/50 tracking-tight">
                                     {children}
                                 </h2>
                             ),
                             h3: ({ children }) => (
-                                <h3 className="text-xl font-semibold mt-8 mb-3">{children}</h3>
+                                <h3 className="text-xl font-semibold mt-10 mb-3 tracking-tight">{children}</h3>
                             ),
-                            // Paragraph styling
                             p: ({ children }) => (
-                                <p className="text-foreground/90 leading-relaxed mb-6 text-lg">
+                                <p className="text-foreground/90 leading-[1.8] mb-6 text-[17px]">
                                     {children}
                                 </p>
                             ),
-                            // Link styling
                             a: ({ href, children }) => (
                                 <a
                                     href={href}
-                                    className="text-primary hover:underline font-medium"
+                                    className="text-primary hover:underline underline-offset-4 font-medium"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
                                     {children}
                                 </a>
                             ),
-                            // Code block styling
                             pre: ({ children }) => (
-                                <pre className="bg-muted/50 border border-border rounded-lg p-4 overflow-x-auto my-6 text-sm">
+                                <pre className="bg-muted/50 border border-border rounded-xl p-5 overflow-x-auto my-8 text-sm leading-relaxed">
                                     {children}
                                 </pre>
                             ),
                             code: ({ children, className }) => {
                                 const isInline = !className;
                                 return isInline ? (
-                                    <code className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono text-primary">
+                                    <code className="bg-muted px-1.5 py-0.5 rounded-md text-sm font-mono text-primary">
                                         {children}
                                     </code>
                                 ) : (
                                     <code className="font-mono text-sm">{children}</code>
                                 );
                             },
-                            // List styling
                             ul: ({ children }) => (
                                 <ul className="list-disc list-outside ml-6 mb-6 space-y-2">
                                     {children}
@@ -224,48 +229,44 @@ export default function BlogReaderPage() {
                                 </ol>
                             ),
                             li: ({ children }) => (
-                                <li className="text-foreground/90 text-lg leading-relaxed">
+                                <li className="text-foreground/90 text-[17px] leading-[1.8]">
                                     {children}
                                 </li>
                             ),
-                            // Blockquote styling
                             blockquote: ({ children }) => (
-                                <blockquote className="border-l-4 border-primary/50 pl-6 my-6 italic text-muted-foreground">
+                                <blockquote className="border-l-4 border-primary/40 pl-6 my-8 italic text-muted-foreground bg-muted/30 py-4 pr-4 rounded-r-lg">
                                     {children}
                                 </blockquote>
                             ),
-                            // Horizontal rule
-                            hr: () => <Separator className="my-8" />,
-                            // Image styling
+                            hr: () => <Separator className="my-10" />,
                             img: ({ src, alt }) => (
-                                <figure className="my-8">
+                                <figure className="my-10">
                                     <img
                                         src={src}
                                         alt={alt || ""}
-                                        className="rounded-lg w-full"
+                                        className="rounded-xl w-full border border-border/50"
                                     />
                                     {alt && (
-                                        <figcaption className="text-center text-sm text-muted-foreground mt-2">
+                                        <figcaption className="text-center text-sm text-muted-foreground mt-3">
                                             {alt}
                                         </figcaption>
                                     )}
                                 </figure>
                             ),
-                            // Table styling
                             table: ({ children }) => (
-                                <div className="overflow-x-auto my-6">
-                                    <table className="w-full border-collapse border border-border rounded-lg">
+                                <div className="overflow-x-auto my-8 rounded-xl border border-border">
+                                    <table className="w-full border-collapse">
                                         {children}
                                     </table>
                                 </div>
                             ),
                             th: ({ children }) => (
-                                <th className="border border-border bg-muted px-4 py-2 text-left font-semibold">
+                                <th className="border-b border-border bg-muted/50 px-4 py-3 text-left font-semibold text-sm">
                                     {children}
                                 </th>
                             ),
                             td: ({ children }) => (
-                                <td className="border border-border px-4 py-2">{children}</td>
+                                <td className="border-b border-border/50 px-4 py-3 text-sm">{children}</td>
                             ),
                         }}
                     >
@@ -275,54 +276,68 @@ export default function BlogReaderPage() {
             </article>
 
             {/* Article Footer */}
-            <Separator className="mx-auto max-w-3xl" />
-
-            <footer className="mx-auto max-w-3xl px-6 py-12">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                    <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
-                            {profile?.initials || "KS"}
+            <div className="border-t border-border/40 bg-muted/30">
+                <div className="mx-auto max-w-4xl px-6 lg:px-8 py-12">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-10">
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
+                                {profile?.initials || "KS"}
+                            </div>
+                            <div>
+                                <p className="font-semibold text-lg">{profile?.name || "Author"}</p>
+                                <p className="text-sm text-muted-foreground">
+                                    {profile?.tagline?.slice(0, 80)}
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="font-semibold text-lg">{profile?.name || "Author"}</p>
+                        <div className="flex gap-2">
+                            {profile?.github_url && (
+                                <Button variant="outline" size="sm" asChild className="gap-1.5">
+                                    <a href={profile.github_url} target="_blank" rel="noopener noreferrer">
+                                        <Github className="w-3.5 h-3.5" />
+                                        GitHub
+                                    </a>
+                                </Button>
+                            )}
+                            {profile?.linkedin_url && (
+                                <Button variant="outline" size="sm" asChild className="gap-1.5">
+                                    <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer">
+                                        <Linkedin className="w-3.5 h-3.5" />
+                                        LinkedIn
+                                    </a>
+                                </Button>
+                            )}
+                        </div>
+                    </div>
+
+                    <Separator className="mb-10" />
+
+                    <div className="text-center">
+                        <Button size="lg" asChild className="gap-2">
+                            <a href="/#blog">
+                                <ArrowRight className="w-4 h-4" />
+                                Read More Posts
+                            </a>
+                        </Button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Site Footer */}
+            <footer className="border-t border-border/40">
+                <div className="mx-auto max-w-4xl px-6 lg:px-8 py-8">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-md bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">
+                                {profile?.initials || "KS"}
+                            </div>
                             <p className="text-sm text-muted-foreground">
-                                {profile?.tagline?.slice(0, 60)}...
+                                © {new Date().getFullYear()} {profile?.name || "Karthick Sakkaravarthi"}
                             </p>
                         </div>
                     </div>
-                    <div className="flex gap-3">
-                        {profile?.github_url && (
-                            <Button variant="outline" size="sm" asChild>
-                                <a href={profile.github_url} target="_blank" rel="noopener noreferrer">
-                                    GitHub
-                                </a>
-                            </Button>
-                        )}
-                        {profile?.linkedin_url && (
-                            <Button variant="outline" size="sm" asChild>
-                                <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer">
-                                    LinkedIn
-                                </a>
-                            </Button>
-                        )}
-                    </div>
-                </div>
-
-                <div className="mt-12 pt-8 border-t border-border/50 text-center">
-                    <Button asChild>
-                        <a href="/#blog">← Read More Posts</a>
-                    </Button>
                 </div>
             </footer>
-
-            {/* Site Footer */}
-            <div className="border-t border-border/40">
-                <div className="mx-auto max-w-3xl px-6 py-8">
-                    <p className="text-sm text-muted-foreground text-center">
-                        © {new Date().getFullYear()} {profile?.name || "Karthick Sakkaravarthi"}. All rights reserved.
-                    </p>
-                </div>
-            </div>
         </div>
     );
 }

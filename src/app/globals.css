@@ -141,6 +141,11 @@
   --tw-prose-code: var(--primary);
 }
 
+.prose-article {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
 /* Selection highlighting */
 ::selection {
   background-color: oklch(0.8 0.15 250);
@@ -150,4 +155,13 @@
 .dark ::selection {
   background-color: oklch(0.5 0.2 250);
   color: white;
+}
+
+/* Smooth transitions for interactive elements */
+@media (prefers-reduced-motion: no-preference) {
+  a, button {
+    transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
 }
