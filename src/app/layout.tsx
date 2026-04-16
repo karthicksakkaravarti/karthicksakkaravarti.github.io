@@ -13,6 +13,13 @@ export const metadata: Metadata = {
   description: "Personal website of Karthick Sakkaravarthi. Explore my projects, career updates, and blog posts.",
   keywords: ["Karthick Sakkaravarthi", "Software Developer", "Portfolio", "Projects", "Blog"],
   authors: [{ name: "Karthick Sakkaravarthi" }],
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: "/favicon.ico",
+  },
   openGraph: {
     title: "Karthick Sakkaravarthi - Software Developer",
     description: "Personal website of Karthick Sakkaravarthi. Explore my projects, career updates, and blog posts.",
